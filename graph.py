@@ -1,3 +1,19 @@
+class NodeNotFound(Exception):
+    def __init__(self, node):
+        super().__init__(f'Node {node} does not exist in the graph.')
+
+class EdgeNotFound(Exception):
+    def __init__(self, edge):
+        super().__init__(f'Edge {edge} does not exist in the graph.')
+
+class DuplicateNode(Exception):
+    def __init__(self, node):
+        super().__init__(f'Node {node} already exists in the graph.')
+
+class DuplicateEdge(Exception):
+    def __init__(self, edge):
+        super().__init__(f'Edge {edge} already exists in the graph.')
+
 class node:
     def __init__(self, label):
         """
@@ -118,6 +134,8 @@ class Graph:
         Return value: none
         Assumptions: labels of nodes in the Graph must be unique
         """
+        if label in self.graph.keys():
+            raise DuplicateNode(label)
         new_node = node(label)
         self.node_label_map[label] = new_node
         self.graph[label] = set()
@@ -135,8 +153,11 @@ class Graph:
         as any edges to/from that node, are removed from the 
         graph
         """
-        node = self.node_label_map[label]
-        adjacent_vertices = self.graph[label]
+        try:
+            node = self.node_label_map[label]
+            adjacent_vertices = self.graph[label]
+        except KeyError:
+            raise NodeNotFound(label)
         
         for vertex in adjacent_vertices:
             self.graph[vertex].remove(label)
@@ -148,6 +169,23 @@ class Graph:
         del self.node_label_map[label]
         self.num_vertices_val -= 1
         
+    def __edge_exists(self, n1, n2):
+        try:
+            edges_n1 = self.graph[n1]
+            if n2 in edges_n1:
+                return True
+            else:
+                raise EdgeNotFound((n1, n2))
+        except KeyError:
+            raise NodeNotFound(n1)
+
+    def __check_duplicate_edge(self, n1, n2):
+        try:
+            edges_n1 = self.graph[n1]
+            if n2 in edges_n1:
+                raise DuplicateEdge((n1, n2))
+        except KeyError:
+            raise NodeNotFound(n1)
     
     def add_edge(self, n1, n2, weight = 1):
         """
@@ -161,6 +199,7 @@ class Graph:
         be unique in the Graph
         Post conditions: one new edge is added to the Graph
         """
+        self.__check_duplicate_edge(n1, n2)
         self.graph[n1].add(n2)
         node_n1 = self.node_label_map[n1]
         node_n2 = self.node_label_map[n2]
@@ -186,6 +225,7 @@ class Graph:
         Post conditions: the edge with the given nodes and weight
         is removed from the graph
         """
+        self.__edge_exists(n1, n2)
         self.graph[n1].remove(n2)
         node_n1 = self.node_label_map[n1]
         node_n2 = self.node_label_map[n2]
