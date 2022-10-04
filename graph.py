@@ -4,8 +4,8 @@ class node:
         Parameter: a string indicating the label of the new node
         """
         self.label = label
-        self.in_degree = 0
-        self.out_degree = 0
+        self.in_degree_val = 0
+        self.out_degree_val = 0
         
     def in_degree(self):
         """
@@ -14,7 +14,7 @@ class node:
         this node
         """
             
-        return self.in_degree
+        return self.in_degree_val
     
     
     def update_in_degree(self, new_edge=0):
@@ -24,11 +24,11 @@ class node:
         this node
         """
         if new_edge == 1:
-            self.in_degree += 1
+            self.in_degree_val += 1
         elif new_edge == -1:
-            self.in_degree -= 1
+            self.in_degree_val -= 1
             
-        return self.in_degree
+        return self.in_degree_val
         
     
     def out_degree(self):
@@ -38,7 +38,7 @@ class node:
         this node
         """
         
-        return self.out_degree
+        return self.out_degree_val
         
     
     def update_out_degree(self, new_edge=0):
@@ -48,10 +48,10 @@ class node:
         this node
         """
         if new_edge == 1:
-            self.out_degree += 1
+            self.out_degree_val += 1
         elif new_edge == -1:
-            self.out_degree -= 1
-        return self.out_degree
+            self.out_degree_val -= 1
+        return self.out_degree_val
     
     def __str__(self):
         """
@@ -69,9 +69,9 @@ class Graph:
         created
         """
         self.directed = directed
-        self.num_vertices = 0
-        self.num_edges = 0
-        self.is_weighted = False
+        self.num_vertices_val = 0
+        self.num_edges_val = 0
+        self.is_weighted_val = False
         self.graph = {}
         self.node_label_map = {}
         
@@ -82,7 +82,7 @@ class Graph:
         of vertices in the graph
         """
         
-        return self.num_vertices
+        return self.num_vertices_val
     
     def num_edges(self):
         """
@@ -91,7 +91,7 @@ class Graph:
         of edges in the graph
         """
         
-        return self.num_edges
+        return self.num_edges_val
     
     def is_directed(self):
         """
@@ -109,7 +109,7 @@ class Graph:
         has a weight other than 1, False otherwise
         """
         
-        return self.is_weighted
+        return self.is_weighted_val
     
     def add_node(self, label):
         """
@@ -122,7 +122,7 @@ class Graph:
         self.node_label_map[label] = new_node
         self.graph[label] = set()
         
-        self.num_vertices += 1
+        self.num_vertices_val += 1
         
         return new_node
     
@@ -142,11 +142,11 @@ class Graph:
             self.graph[vertex].remove(label)
             vertex_node = self.node_label_map[vertex]
             ## TO do: In degree
-            self.num_edges -= 1
+            self.num_edges_val -= 1
         
         del self.graph[label]
         del self.node_label_map[label]
-        self.num_vertices -= 1
+        self.num_vertices_val -= 1
         
     
     def add_edge(self, n1, n2, weight = 1):
@@ -172,7 +172,7 @@ class Graph:
             node_n2.update_out_degree(1)
             node_n1.update_in_degree(1)
             
-        self.num_edges += 1
+        self.num_edges_val += 1
         
     
     def remove_edge(self, n1, n2, weight = 1):
@@ -197,7 +197,7 @@ class Graph:
             node_n2.update_out_degree(-1)
             node_n1.update_in_degree(-1)
             
-        self.num_edges -= 1
+        self.num_edges_val -= 1
     
     def BFS(self, source):
         """
