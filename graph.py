@@ -142,7 +142,7 @@ class Graph:
         Return value: none
         Assumptions: labels of nodes in the Graph must be unique
         """
-        self.__check_node_exists(label)
+        self.__check_node_duplicate(label)
         new_node = node(label)
         self.node_label_map[label] = new_node
         self.graph[label] = set()
@@ -160,7 +160,7 @@ class Graph:
         as any edges to/from that node, are removed from the 
         graph
         """
-        self.__check_node_duplicate(label)
+        self.__check_node_exists(label)
         node = self.node_label_map[label]
         adjacent_vertices = self.graph[label]
         
@@ -308,6 +308,8 @@ class Graph:
         Return value: a boolean - True if there is an edge in the 
             Graph from n1 to n2, False otherwise
         """
+        self.__check_node_exists(n1)
+        self.__check_node_exists(n2)
         if n2 in self.graph.get(n1):
             return True
         else:
@@ -359,7 +361,7 @@ class Graph:
         adjacent to the node with the given label
         """
         self.__check_node_exists(label)
-        return self.graph[label]
+        return list(self.graph[label])
     
     def random_return(self):
         return self.graph
