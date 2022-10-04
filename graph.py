@@ -126,7 +126,15 @@ class Graph:
         """
         
         return self.is_weighted_val
-    
+
+    def __check_node_exists(self, label):
+        if label not in self.graph.keys():
+            raise NodeNotFound(label)
+
+    def __check_node_duplicate(self, label):
+        if label in self.graph.keys():
+            raise DuplicateNode(label)
+
     def add_node(self, label):
         """
         Parameter: a string indicating the label of a new node
@@ -134,8 +142,7 @@ class Graph:
         Return value: none
         Assumptions: labels of nodes in the Graph must be unique
         """
-        if label in self.graph.keys():
-            raise DuplicateNode(label)
+        self.__check_node_exists(label)
         new_node = node(label)
         self.node_label_map[label] = new_node
         self.graph[label] = set()
@@ -153,11 +160,9 @@ class Graph:
         as any edges to/from that node, are removed from the 
         graph
         """
-        try:
-            node = self.node_label_map[label]
-            adjacent_vertices = self.graph[label]
-        except KeyError:
-            raise NodeNotFound(label)
+        self.__check_node_duplicate(label)
+        node = self.node_label_map[label]
+        adjacent_vertices = self.graph[label]
         
         for vertex in adjacent_vertices:
             self.graph[vertex].remove(label)
@@ -318,6 +323,8 @@ class Graph:
             label n1, L[-1] has label n2, and for 1 <= i <= len(L) - 1,
             the Graph has an edge from L[i-1] to L[i]
         """
+        self.__check_node_exists(n1)
+        self.__check_node_exists(n2)
         visited_dict = {}
         result_list = []
         for node in self.graph.keys():
@@ -351,7 +358,7 @@ class Graph:
         Return value: a list of node objects containing all nodes
         adjacent to the node with the given label
         """
-        
+        self.__check_node_exists(label)
         return self.graph[label]
     
     def random_return(self):
