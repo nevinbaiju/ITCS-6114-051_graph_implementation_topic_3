@@ -90,6 +90,9 @@ class Graph:
         self.is_weighted_val = False
         self.graph = {}
         self.node_label_map = {}
+
+    def set_graph(self, graph):
+        self.graph = graph
         
     def num_vertices(self):
         """
@@ -254,22 +257,26 @@ class Graph:
         
         visited_dict = {}
         result_list = []
-        for node in self.graph.keys():
-            visited_dict[node] = False
+        def do_bfs(source):
+            result_list = []
+            queue = [source]
+
+            while queue:
+                print(queue)
+                current_node = queue.pop(0)
+                visited_dict[current_node] = True
+                result_list.append(current_node)
+                for neighbor in self.graph[current_node]:
+                    if not visited_dict.get(neighbor, False) and neighbor not in queue:
+                        queue.append(neighbor)
+            
+            return result_list
         
-        def do_dfs(current_node):
-            if visited_dict[current_node]:
-                return
-            visited_dict[current_node] = True
-            result_list.append(current_node)
-            for neighbour_node in self.graph[current_node]:
-                do_dfs(neighbour_node)
-        
-        do_dfs(source)
-        for node in visited_dict.keys():
-            if not visited_dict[node]:
-                do_dfs(node)
-        
+        result_list = do_bfs(source)
+        # for node in self.graph.keys():
+        #     if not visited_dict.get(node, False):
+        #         result_list += do_bfs(node)
+
         return result_list
         
     def DFS(self, source):
